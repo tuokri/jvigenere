@@ -1,19 +1,28 @@
 package com.github.vigeneretable;
 
+import com.github.util.StringUtils;
+
 import java.util.ArrayList;
 
 public class VigenereTable {
 
-    private String alphabet;
-    private ArrayList<String> table;
+    private final String alphabet;
+    private final ArrayList<String> table;
 
     public VigenereTable() {
+
         this.alphabet = "";
         this.table = generateTable(this.alphabet);
     }
 
-    public VigenereTable(String alphabet) {
-        this.alphabet = "";
+    public VigenereTable(String alphabet) throws IllegalArgumentException {
+
+        if(!StringUtils.isAllUnique(alphabet)) {
+
+            throw new IllegalArgumentException("Alphabet cannot contain duplicate characters.");
+        }
+
+        this.alphabet = alphabet;
         this.table = generateTable(alphabet);
     }
 
@@ -23,12 +32,21 @@ public class VigenereTable {
 
         for(int i = 0; i < alphabet.length(); i++) {
 
-            // TODO: Refactor.
-            String shifted = alphabet.substring(alphabet.length() - i) + alphabet.substring(0, alphabet.length() - i);
+            String shifted = StringUtils.shift(alphabet, -i);
             newTable.add(shifted);
         }
 
         return newTable;
+    }
+
+    public String toCipherText(String plainText) {
+
+        return "";
+    }
+
+    public String toPlainText(String cipherText) {
+
+        return "";
     }
 
     public String getAlphabet() {
@@ -39,16 +57,6 @@ public class VigenereTable {
     public ArrayList<String> getTable() {
 
         return table;
-    }
-
-    public void setAlphabet(String alphabet) {
-
-        this.alphabet = alphabet;
-    }
-
-    public void setTable(ArrayList<String> table) {
-
-        this.table = table;
     }
 
     public String toString() {
