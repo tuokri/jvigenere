@@ -3,6 +3,8 @@ package com.github.util;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StringUtilsTest {
 
@@ -26,7 +28,6 @@ class StringUtilsTest {
         String result = StringUtils.shift("teststring", 13);
         assertEquals("ingteststr", result);
     }
-
 
     @Test
     void shifByNegativeOffsetGreaterThanStringLength() {
@@ -66,5 +67,14 @@ class StringUtilsTest {
     @Test
     void isAllUnique() {
 
+        boolean result = StringUtils.isAllUnique("");
+        assertTrue(result);
+    }
+
+    @Test
+    void isAllUniqueNonUniqueStringShouldReturnFalse() {
+
+        boolean result = StringUtils.isAllUnique("aa");
+        assertFalse(result);
     }
 }
