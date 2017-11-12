@@ -77,4 +77,18 @@ class StringUtilsTest {
         boolean result = StringUtils.isAllUnique("aa");
         assertFalse(result);
     }
+
+    @Test
+    void containsAllAllowedCharacters() {
+
+        boolean result = StringUtils.containsAll("allowed", "alo");
+        assertTrue(result);
+    }
+
+    @Test
+    void containsAllNonAllowedCharacters() {
+
+        boolean result = StringUtils.containsAll("allowedrino", "kurwayobane");
+        assertFalse(result);
+    }
 }

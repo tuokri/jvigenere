@@ -46,4 +46,17 @@ public class StringUtils {
 
         return true;
     }
+
+    public static boolean containsAll(String allowed, String toCheck) {
+
+        for(char c : toCheck.toCharArray()) {
+
+            if(allowed.indexOf(c) == -1) {
+
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
