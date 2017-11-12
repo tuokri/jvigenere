@@ -37,33 +37,78 @@ public class VigenereTable {
         return newTable;
     }
 
-    public String toCipherText(String plainText, String key) {
+    public String encrypt(String plainText, String key) throws IllegalArgumentException {
 
         if(!StringUtils.containsAll(alphabet, key)) {
             throw new IllegalArgumentException("Key cannot contain non-alphabet characters");
         }
 
-        StringBuilder cipher = new StringBuilder();
-        char char_key;
-        int col_key = 0;
-        int row_plain = 0;
-        int k = 0;
+        StringBuilder cipherText = new StringBuilder();
+        char keyChar;
+        int keyCol = 0;
+        int plainTextRow = 0;
+        int keyIndex = 0;
 
-        for(char char_plain : plainText.toCharArray()) {
+        for(char plainChar : plainText.toCharArray()) {
 
-            char_key = key.charAt(k);
-            k = (k + 1) % key.length();
-            col_key = alphabet.indexOf(char_key);
-            row_plain = alphabet.indexOf(char_plain);
-            cipher.append(table.get(row_plain).charAt(col_key));
+            if(plainChar == ' ') {
+
+                cipherText.append(plainChar);
+
+            } else {
+
+                keyChar = key.charAt(keyIndex);
+                keyIndex = (keyIndex + 1) % key.length();
+                keyCol = alphabet.indexOf(keyChar);
+                plainTextRow = alphabet.indexOf(plainChar);
+                cipherText.append(table.get(plainTextRow).charAt(keyCol));
+
+            }
         }
 
-        return cipher.toString();
+        return cipherText.toString();
     }
 
-    public String toPlainText(String cipherText, String key) {
+    public String decrypt(String cipherText, String key) throws IllegalArgumentException {
 
-        return "";
+        if(!StringUtils.containsAll(alphabet, key)) {
+            throw new IllegalArgumentException("Key cannot contain non-alphabet characters");
+        }
+
+        StringBuilder plainText = new StringBuilder();
+        char keyChar;
+        int keyCol = 0;
+        int plainTextRow = 0;
+        int keyIndex = 0;
+
+        for(char cipherChar : cipherText.toCharArray()) {
+
+            if(cipherChar == ' ') {
+
+                plainText.append(cipherChar);
+
+            } else {
+
+            keyChar = key.charAt(keyIndex);
+            keyIndex = (keyIndex + 1) % key.length();
+            keyCol = alphabet.indexOf(keyChar);
+
+            plainTextRow = 0;
+            for(String row : table) {
+
+                if(row.charAt(keyCol) == cipherChar) {
+                    break;
+                }
+
+                plainTextRow++;
+            }
+
+            plainText.append(alphabet.charAt(plainTextRow));
+
+            }
+        }
+
+        return plainText.toString();
     }
 
     public String getAlphabet() {
