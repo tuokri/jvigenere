@@ -15,6 +15,7 @@ public class StringUtils {
 
         if(offset == 0 || offset == string.length()) {
             result = string;
+
         } else if(offset > 0) {
 
             result = string.substring(string.length() - offset)

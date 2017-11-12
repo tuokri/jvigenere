@@ -18,8 +18,7 @@ public class VigenereTable {
     public VigenereTable(String alphabet) throws IllegalArgumentException {
 
         if(!StringUtils.isAllUnique(alphabet)) {
-
-            throw new IllegalArgumentException("Alphabet cannot contain duplicate characters.");
+            throw new IllegalArgumentException("Alphabet cannot contain duplicate characters");
         }
 
         this.alphabet = alphabet;
@@ -31,7 +30,6 @@ public class VigenereTable {
         ArrayList<String> newTable = new ArrayList<String>(alphabet.length());
 
         for(int i = 0; i < alphabet.length(); i++) {
-
             String shifted = StringUtils.shift(alphabet, -i);
             newTable.add(shifted);
         }
