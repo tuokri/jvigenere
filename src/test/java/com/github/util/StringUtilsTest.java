@@ -91,4 +91,25 @@ class StringUtilsTest {
         boolean result = StringUtils.containsAll("allowedrino", "kurwayobane");
         assertFalse(result);
     }
+
+    @Test
+    void containsAllEmptyStrings() {
+
+        boolean result = StringUtils.containsAll("", "");
+        assertTrue(result);
+    }
+
+    @Test
+    void containsAllEmptyAllowedString() {
+
+        boolean result = StringUtils.containsAll("", "asd");
+        assertFalse(result);
+    }
+
+    @Test
+    void containsAllEmptyEmptyToCheckString() {
+
+        boolean result = StringUtils.containsAll("hmm", "");
+        assertTrue(result);
+    }
 }
