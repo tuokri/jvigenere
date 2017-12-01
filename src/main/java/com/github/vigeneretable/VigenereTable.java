@@ -69,6 +69,12 @@ public class VigenereTable {
         return cipherText.toString();
     }
 
+    public String encrypt(String plainText, String key, int beginIndex, int endIndex) throws IllegalArgumentException {
+
+        key = StringUtils.shift(key, -beginIndex);
+        return encrypt(plainText.substring(beginIndex, endIndex), key);
+    }
+
     public String decrypt(String cipherText, String key) throws IllegalArgumentException {
 
         if(!StringUtils.containsAll(alphabet, key)) {
@@ -77,8 +83,8 @@ public class VigenereTable {
 
         StringBuilder plainText = new StringBuilder();
         char keyChar;
-        int keyCol = 0;
-        int plainTextRow = 0;
+        int keyCol;
+        int plainTextRow;
         int keyIndex = 0;
 
         for(char cipherChar : cipherText.toCharArray()) {
@@ -109,6 +115,12 @@ public class VigenereTable {
         }
 
         return plainText.toString();
+    }
+
+    public String decrypt(String cipherText, String key, int beginIndex, int endIndex) throws IllegalArgumentException {
+
+        key = StringUtils.shift(key, -beginIndex);
+        return decrypt(cipherText.substring(beginIndex, endIndex), key);
     }
 
     public String getAlphabet() {
