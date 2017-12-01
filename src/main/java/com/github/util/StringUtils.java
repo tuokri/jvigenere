@@ -4,13 +4,17 @@ import java.math.BigInteger;
 
 public class StringUtils {
 
+    private StringUtils() {}
+
     public static String shift(String string, int offset) {
 
         if(string.length() == 0) {
             return string;
         }
 
-        String result = null;
+        String result;
+
+        // Optimize away multiple shift "rounds".
         offset = offset % string.length();
 
         if(offset == 0 || offset == string.length()) {
@@ -21,7 +25,7 @@ public class StringUtils {
             result = string.substring(string.length() - offset)
                     + string.substring(0, string.length() - offset);
 
-        } else if(offset < 0) {
+        } else {
 
             result = string.substring(-offset) + string.substring(0, -offset);
         }
@@ -31,6 +35,7 @@ public class StringUtils {
 
     public static boolean isAllUnique(String s) {
 
+        // Lé magic.
         if(s.length() > 32768) {
             return false;
         }
