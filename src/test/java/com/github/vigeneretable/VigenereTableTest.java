@@ -3,6 +3,10 @@ package com.github.vigeneretable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class VigenereTableTest {
@@ -12,11 +16,11 @@ class VigenereTableTest {
     @BeforeEach
     void setUp() {
 
-        vTable = new VigenereTable("abcdefghijklmnopqrstuvwxyz");
+        vTable = new VigenereTable(VigenereTable.ALPHABET_LATIN);
     }
 
     @Test
-    void encrypt() {
+    void basicEncrypt() {
 
         String plainText = "this is a message";
         String cipherText = "";
@@ -27,7 +31,7 @@ class VigenereTableTest {
     }
 
     @Test
-    void decrypt() {
+    void basicDecrypt() {
 
         String plainText = "";
         String cipherText = "pbbo cl w gxomtcy";
@@ -35,5 +39,22 @@ class VigenereTableTest {
 
         plainText = vTable.decrypt(cipherText, key);
         assertEquals("this is a message", plainText);
+    }
+
+    @Test
+    void basicGenerateTable() {
+
+        ArrayList<ArrayList<SimpleEntry<Character, Boolean>>> expected = new ArrayList<>();
+        expected.add(new ArrayList<>(Arrays.asList(
+            new SimpleEntry<>('a', true), new SimpleEntry<>('b', true), new SimpleEntry<>('c', true))));
+        expected.add(new ArrayList<>(Arrays.asList(
+            new SimpleEntry<>('b', true), new SimpleEntry<>('c', true), new SimpleEntry<>('a', true))));
+        expected.add(new ArrayList<>(Arrays.asList(
+            new SimpleEntry<>('c', true), new SimpleEntry<>('a', true), new SimpleEntry<>('b', true))));
+
+        ArrayList<ArrayList<SimpleEntry<Character, Boolean>>> actual;
+        actual = VigenereTable.generateTable("abc");
+
+        assertEquals(expected, actual);
     }
 }
