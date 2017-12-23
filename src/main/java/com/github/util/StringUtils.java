@@ -4,11 +4,13 @@ import java.math.BigInteger;
 
 public class StringUtils {
 
-    private StringUtils() {}
+    private StringUtils() {
+
+    }
 
     public static String shift(String string, int offset) {
 
-        if(string.length() == 0) {
+        if (string.length() == 0) {
             return string;
         }
 
@@ -17,13 +19,13 @@ public class StringUtils {
         // Optimize away multiple shift "rounds".
         offset = offset % string.length();
 
-        if(offset == 0 || offset == string.length()) {
+        if (offset == 0 || offset == string.length()) {
             result = string;
 
-        } else if(offset > 0) {
+        } else if (offset > 0) {
 
             result = string.substring(string.length() - offset)
-                    + string.substring(0, string.length() - offset);
+                + string.substring(0, string.length() - offset);
 
         } else {
 
@@ -36,16 +38,21 @@ public class StringUtils {
     public static boolean isAllUnique(String s) {
 
         // Lé magic.
-        if(s.length() > 32768) {
+        // Assume amount of possible characters for now.
+        if (s.length() > 32768) {
             return false;
         }
 
         BigInteger checker = BigInteger.ZERO;
         for (int i = 0; i < s.length(); i++) {
+
             int val = s.charAt(i);
+
             if (checker.testBit(val)) {
                 return false;
+
             }
+
             checker = checker.setBit(val);
         }
 
@@ -54,9 +61,9 @@ public class StringUtils {
 
     public static boolean containsAll(String allowed, String toCheck) {
 
-        for(char c : toCheck.toCharArray()) {
+        for (char c : toCheck.toCharArray()) {
 
-            if(allowed.indexOf(c) == -1) {
+            if (allowed.indexOf(c) == -1) {
 
                 return false;
             }
