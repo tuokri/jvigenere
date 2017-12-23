@@ -9,7 +9,6 @@ import java.util.List;
 
 public class VigenereTable {
 
-    public static final List<Character> IGNORED_CHARACTERS = Arrays.asList(' ', ',');
     public static final String ALPHABET_LATIN = "abcdefghijklmnopqrstuvwxyz";
 
     private final String alphabet;
@@ -59,7 +58,10 @@ public class VigenereTable {
 
         for (Character plainChar : plainText.toCharArray()) {
 
-            if (IGNORED_CHARACTERS.contains(plainChar)) {
+            plainTextCol = alphabet.indexOf(plainChar);
+
+            // Ignore non-alphabet characters.
+            if (plainTextCol == -1) {
 
                 cipherText.append(plainChar);
 
@@ -68,7 +70,6 @@ public class VigenereTable {
                 keyChar = key.charAt(keyIndex);
                 keyIndex = (keyIndex + 1) % key.length();
                 keyRow = alphabet.indexOf(keyChar);
-                plainTextCol = alphabet.indexOf(plainChar);
                 cipherText.append(table.get(keyRow).get(plainTextCol).getKey());
 
             }
@@ -98,7 +99,8 @@ public class VigenereTable {
 
         for (Character cipherChar : cipherText.toCharArray()) {
 
-            if (IGNORED_CHARACTERS.contains(cipherChar)) {
+            // Ignore non-alphabet characters.
+            if (!alphabet.contains(cipherChar.toString())) {
 
                 plainText.append(cipherChar);
 
@@ -107,8 +109,8 @@ public class VigenereTable {
                 keyChar = key.charAt(keyIndex);
                 keyIndex = (keyIndex + 1) % key.length();
                 keyRow = alphabet.indexOf(keyChar);
-
                 plainTextCol = 0;
+
                 for (ArrayList<SimpleEntry<Character, Boolean>> row : table) {
 
                     if (row.get(keyRow).getKey() == cipherChar) {
