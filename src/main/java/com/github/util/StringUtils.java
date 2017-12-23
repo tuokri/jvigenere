@@ -61,9 +61,9 @@ public class StringUtils {
 
     public static boolean containsAll(String allowed, String toCheck) {
 
-        for (char c : toCheck.toCharArray()) {
+        for (Character c : toCheck.toCharArray()) {
 
-            if (allowed.indexOf(c) == -1) {
+            if (!allowed.contains(c.toString())) {
 
                 return false;
             }
