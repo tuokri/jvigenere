@@ -72,6 +72,21 @@ class StringUtilsTest {
     }
 
     @Test
+    void isAllUniqueSameCharacterMultipleTimesShouldReturnFalse() {
+
+        boolean result = StringUtils.isAllUnique("abcabcc");
+        assertEquals(false, result);
+
+    }
+
+    @Test
+    void isAllUniqueUpperAndLowerCaseOfSameCharacterShouldReturnTrue() {
+
+        boolean result = StringUtils.isAllUnique("Aa");
+        assertEquals(true, result);
+    }
+
+    @Test
     void isAllUniqueNonUniqueStringShouldReturnFalse() {
 
         boolean result = StringUtils.isAllUnique("aa");
