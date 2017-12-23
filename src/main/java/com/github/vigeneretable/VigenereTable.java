@@ -2,22 +2,42 @@ package com.github.vigeneretable;
 
 import com.github.util.StringUtils;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class VigenereTable {
 
+    public static final List<Character> IGNORED_CHARACTERS = Arrays.asList(' ', ',');
+    public static final String ALPHABET_LATIN = "abcdefghijklmnopqrstuvwxyz";
+
     private final String alphabet;
-    private final ArrayList<String> table;
+    private final ArrayList<ArrayList<SimpleEntry<Character, Boolean>>> table;
 
-    public VigenereTable() {
+    public static ArrayList<ArrayList<SimpleEntry<Character, Boolean>>> generateTable(String alphabet) {
 
-        this.alphabet = "";
-        this.table = generateTable(this.alphabet);
+        ArrayList<ArrayList<SimpleEntry<Character, Boolean>>> newTable = new ArrayList<>(alphabet.length());
+
+        for (int i = 0; i < alphabet.length(); i++) {
+
+            ArrayList<SimpleEntry<Character, Boolean>> newRow = new ArrayList<>(alphabet.length());
+
+            for (int j = 0; j < alphabet.length(); j++) {
+
+                Character c = alphabet.charAt((j + i) % alphabet.length());
+                newRow.add(new SimpleEntry<>(c, true));
+            }
+
+            newTable.add(newRow);
+        }
+
+        return newTable;
     }
 
     public VigenereTable(String alphabet) throws IllegalArgumentException {
 
-        if(!StringUtils.isAllUnique(alphabet)) {
+        if (!StringUtils.isAllUnique(alphabet)) {
             throw new IllegalArgumentException("Alphabet cannot contain duplicate characters");
         }
 
@@ -25,33 +45,21 @@ public class VigenereTable {
         this.table = generateTable(alphabet);
     }
 
-    public ArrayList<String> generateTable(String alphabet) {
-
-        ArrayList<String> newTable = new ArrayList<String>(alphabet.length());
-
-        for(int i = 0; i < alphabet.length(); i++) {
-            String shifted = StringUtils.shift(alphabet, -i);
-            newTable.add(shifted);
-        }
-
-        return newTable;
-    }
-
     public String encrypt(String plainText, String key) throws IllegalArgumentException {
 
-        if(!StringUtils.containsAll(alphabet, key)) {
+        if (!StringUtils.containsAll(alphabet, key)) {
             throw new IllegalArgumentException("Key cannot contain non-alphabet characters");
         }
 
         StringBuilder cipherText = new StringBuilder();
-        char keyChar;
-        int keyCol = 0;
-        int plainTextRow = 0;
+        Character keyChar;
+        int keyRow;
+        int plainTextCol;
         int keyIndex = 0;
 
-        for(char plainChar : plainText.toCharArray()) {
+        for (Character plainChar : plainText.toCharArray()) {
 
-            if(plainChar == ' ') {
+            if (IGNORED_CHARACTERS.contains(plainChar)) {
 
                 cipherText.append(plainChar);
 
@@ -59,9 +67,9 @@ public class VigenereTable {
 
                 keyChar = key.charAt(keyIndex);
                 keyIndex = (keyIndex + 1) % key.length();
-                keyCol = alphabet.indexOf(keyChar);
-                plainTextRow = alphabet.indexOf(plainChar);
-                cipherText.append(table.get(plainTextRow).charAt(keyCol));
+                keyRow = alphabet.indexOf(keyChar);
+                plainTextCol = alphabet.indexOf(plainChar);
+                cipherText.append(table.get(keyRow).get(plainTextCol).getKey());
 
             }
         }
@@ -72,45 +80,45 @@ public class VigenereTable {
     public String encrypt(String plainText, String key, int beginIndex, int endIndex) throws IllegalArgumentException {
 
         key = StringUtils.shift(key, -beginIndex);
-        return encrypt(plainText.substring(beginIndex, endIndex), key);
+        plainText = plainText.substring(beginIndex, endIndex);
+        return encrypt(plainText, key);
     }
 
     public String decrypt(String cipherText, String key) throws IllegalArgumentException {
 
-        if(!StringUtils.containsAll(alphabet, key)) {
+        if (!StringUtils.containsAll(alphabet, key)) {
             throw new IllegalArgumentException("Key cannot contain non-alphabet characters");
         }
 
         StringBuilder plainText = new StringBuilder();
-        char keyChar;
-        int keyCol;
-        int plainTextRow;
+        Character keyChar;
+        int keyRow;
+        int plainTextCol;
         int keyIndex = 0;
 
-        for(char cipherChar : cipherText.toCharArray()) {
+        for (Character cipherChar : cipherText.toCharArray()) {
 
-            if(cipherChar == ' ') {
+            if (IGNORED_CHARACTERS.contains(cipherChar)) {
 
                 plainText.append(cipherChar);
 
             } else {
 
-            keyChar = key.charAt(keyIndex);
-            keyIndex = (keyIndex + 1) % key.length();
-            keyCol = alphabet.indexOf(keyChar);
+                keyChar = key.charAt(keyIndex);
+                keyIndex = (keyIndex + 1) % key.length();
+                keyRow = alphabet.indexOf(keyChar);
 
-            plainTextRow = 0;
-            for(String row : table) {
+                plainTextCol = 0;
+                for (ArrayList<SimpleEntry<Character, Boolean>> row : table) {
 
-                if(row.charAt(keyCol) == cipherChar) {
-                    break;
+                    if (row.get(keyRow).getKey() == cipherChar) {
+
+                        plainText.append(alphabet.charAt(plainTextCol));
+                        break;
+                    }
+
+                    plainTextCol++;
                 }
-
-                plainTextRow++;
-            }
-
-            plainText.append(alphabet.charAt(plainTextRow));
-
             }
         }
 
@@ -120,7 +128,8 @@ public class VigenereTable {
     public String decrypt(String cipherText, String key, int beginIndex, int endIndex) throws IllegalArgumentException {
 
         key = StringUtils.shift(key, -beginIndex);
-        return decrypt(cipherText.substring(beginIndex, endIndex), key);
+        cipherText = cipherText.substring(beginIndex, endIndex);
+        return decrypt(cipherText, key);
     }
 
     public String getAlphabet() {
@@ -128,7 +137,7 @@ public class VigenereTable {
         return alphabet;
     }
 
-    public ArrayList<String> getTable() {
+    public ArrayList<ArrayList<SimpleEntry<Character, Boolean>>> getTable() {
 
         return table;
     }
