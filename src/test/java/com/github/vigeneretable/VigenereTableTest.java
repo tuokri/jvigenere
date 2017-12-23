@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class VigenereTableTest {
 
@@ -23,7 +24,7 @@ class VigenereTableTest {
     void basicEncrypt() {
 
         String plainText = "this is a message";
-        String cipherText = "";
+        String cipherText;
         String key = "wut";
 
         cipherText = vTable.encrypt(plainText, key);
@@ -33,12 +34,34 @@ class VigenereTableTest {
     @Test
     void basicDecrypt() {
 
-        String plainText = "";
+        String plainText;
         String cipherText = "pbbo cl w gxomtcy";
         String key = "wut";
 
         plainText = vTable.decrypt(cipherText, key);
         assertEquals("this is a message", plainText);
+    }
+
+    @Test
+    void encryptNonAlphabetCharactersShouldNotChange() {
+
+        String plainText = "ÖÄå* this is a message";
+        String cipherText;
+        String key = "wut";
+
+        cipherText = vTable.encrypt(plainText, key);
+        assertEquals("ÖÄå* pbbo cl w gxomtcy", cipherText);
+    }
+
+    @Test
+    void decryptNonAlphabetCharactersShouldNotChange() {
+
+        String plainText;
+        String cipherText = "_268 pbbo cl w gxomtcy &&";
+        String key = "wut";
+
+        plainText = vTable.decrypt(cipherText, key);
+        assertEquals("_268 this is a message &&", plainText);
     }
 
     @Test
