@@ -65,6 +65,20 @@ class StringUtilsTest {
     }
 
     @Test
+    void shiftByPositiveOffsetMultipleRounds() {
+
+        String result = StringUtils.shift("hmm", 16);
+        assertEquals("mhm", result);
+    }
+
+    @Test
+    void shiftByNegativeOffsetMultipleRounds() {
+
+        String result = StringUtils.shift("let's go", -23);
+        assertEquals("olet's g", result);
+    }
+
+    @Test
     void isAllUnique() {
 
         boolean result = StringUtils.isAllUnique("");
