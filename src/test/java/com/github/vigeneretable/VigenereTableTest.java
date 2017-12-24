@@ -21,6 +21,14 @@ class VigenereTableTest {
     }
 
     @Test
+    void constructWithNonUniqueAlphabetShouldThrowInvalidArgumentException() {
+
+        assertThrows(IllegalArgumentException.class, ()-> {
+            new VigenereTable("nonuniquealphabet");
+        });
+    }
+
+    @Test
     void basicEncrypt() {
 
         String plainText = "this is a message";
@@ -54,6 +62,76 @@ class VigenereTableTest {
     }
 
     @Test
+    void encryptByIndicesOnlyAlphabetCharacters() {
+
+        int beginIndex = 4;
+        int endIndex = 8;
+        String plainText = "justanothermessage";
+        String cipherText = "folpugknaalfamlwax";
+        String key = "wut";
+
+        String actual = vTable.encrypt(plainText, key, beginIndex, endIndex);
+        String expected = cipherText.substring(beginIndex, endIndex);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void decryptByIndicesOnlyAlphabetCharacters() {
+
+        int beginIndex = 5;
+        int endIndex = 12;
+        String plainText = "justanothermessage";
+        String cipherText = "folpugknaalfamlwax";
+        String key = "wut";
+
+        String actual = vTable.decrypt(cipherText, key, beginIndex, endIndex);
+        String expected = plainText.substring(beginIndex, endIndex);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void encryptByIndicesStringWithNonAlphabetCharacters() {
+
+        int beginIndex = 4;
+        int endIndex = 8;
+        String plainText = "just another message";
+        String cipherText = "folp ugknaal famlwax";
+        String key = "wut";
+
+        String actual = vTable.encrypt(plainText, key, beginIndex, endIndex);
+        String expected = cipherText.substring(beginIndex, endIndex);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void decryptByIndicesStringWithNonAlphabetCharacters() {
+
+        int beginIndex = 5;
+        int endIndex = 12;
+        String plainText = "just another message";
+        String cipherText = "folp ugknaal famlwax";
+        String key = "wut";
+
+        String actual = vTable.decrypt(cipherText, key, beginIndex, endIndex);
+        String expected = plainText.substring(beginIndex, endIndex);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void encryptByIndicesLongSequenceOfNonAlphabetCharacters() {
+
+        int beginIndex = 3;
+        int endIndex = 16;
+        String plainText = "LOO&&ng   mes sa ge 234234822374";
+        String cipherText = "LOO&&ja   fam lw ax 234234822374";
+        String key = "wut";
+
+        String actual = vTable.encrypt(plainText, key, beginIndex, endIndex);
+        String expected = cipherText.substring(beginIndex, endIndex);
+        assertEquals(expected, actual);
+    }
+
+    @Test
     void decryptNonAlphabetCharactersShouldNotChange() {
 
         String plainText;
@@ -62,6 +140,28 @@ class VigenereTableTest {
 
         plainText = vTable.decrypt(cipherText, key);
         assertEquals("_268 this is a message &&", plainText);
+    }
+
+    @Test
+    void encryptWithEmptyKey() {
+
+        String plainText = "this here is a message";
+        String cipherText;
+        String key = "";
+
+        cipherText = vTable.encrypt(plainText, key);
+        assertEquals(plainText, cipherText);
+    }
+
+    @Test
+    void decryptWithEmptyKey() {
+
+        String plainText;
+        String cipherText = "this here is a message";
+        String key = "";
+
+        plainText = vTable.decrypt(cipherText, key);
+        assertEquals(cipherText, plainText);
     }
 
     @Test
