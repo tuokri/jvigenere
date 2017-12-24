@@ -4,17 +4,21 @@ import com.github.util.StringUtils;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class VigenereTable {
 
     public static final String ALPHABET_LATIN = "abcdefghijklmnopqrstuvwxyz";
+    public static final String ALPHABET_SCANDINAVIAN = "abcdefghijklmnopqrstuvwxyzåäö";
 
     private final String alphabet;
     private final ArrayList<ArrayList<SimpleEntry<Character, Boolean>>> table;
 
-    public static ArrayList<ArrayList<SimpleEntry<Character, Boolean>>> generateTable(String alphabet) {
+    public static ArrayList<ArrayList<SimpleEntry<Character, Boolean>>> generateTable(String alphabet)
+        throws IllegalArgumentException {
+
+        if (!StringUtils.isAllUnique(alphabet)) {
+            throw new IllegalArgumentException("Alphabet cannot contain duplicate characters");
+        }
 
         ArrayList<ArrayList<SimpleEntry<Character, Boolean>>> newTable = new ArrayList<>(alphabet.length());
 
@@ -45,6 +49,11 @@ public class VigenereTable {
     }
 
     public String encrypt(String plainText, String key) throws IllegalArgumentException {
+
+        if(key.length() == 0) {
+
+            return plainText;
+        }
 
         if (!StringUtils.containsAll(alphabet, key)) {
             throw new IllegalArgumentException("Key cannot contain non-alphabet characters");
@@ -78,14 +87,20 @@ public class VigenereTable {
         return cipherText.toString();
     }
 
-    public String encrypt(String plainText, String key, int beginIndex, int endIndex) throws IllegalArgumentException {
+    public String encrypt(String plainText, String key, int beginIndex, int endIndex) {
 
-        key = StringUtils.shift(key, -beginIndex);
+        int keyOffset = beginIndex - countNonAlphabetCharacters(plainText.substring(0, beginIndex));
+        key = StringUtils.shift(key, -keyOffset);
         plainText = plainText.substring(beginIndex, endIndex);
         return encrypt(plainText, key);
     }
 
     public String decrypt(String cipherText, String key) throws IllegalArgumentException {
+
+        if (key.length() == 0) {
+
+            return cipherText;
+        }
 
         if (!StringUtils.containsAll(alphabet, key)) {
             throw new IllegalArgumentException("Key cannot contain non-alphabet characters");
@@ -127,11 +142,26 @@ public class VigenereTable {
         return plainText.toString();
     }
 
-    public String decrypt(String cipherText, String key, int beginIndex, int endIndex) throws IllegalArgumentException {
+    public String decrypt(String cipherText, String key, int beginIndex, int endIndex) {
 
-        key = StringUtils.shift(key, -beginIndex);
+        int keyOffset = beginIndex - countNonAlphabetCharacters(cipherText.substring(0, beginIndex));
+        key = StringUtils.shift(key, -keyOffset);
         cipherText = cipherText.substring(beginIndex, endIndex);
         return decrypt(cipherText, key);
+    }
+
+    public int countNonAlphabetCharacters(String string) {
+
+        int c = 0;
+        for (int i = 0; i < string.length(); i++) {
+
+            if (alphabet.indexOf(string.charAt(i)) == -1) {
+
+                c++;
+            }
+        }
+
+        return c;
     }
 
     public String getAlphabet() {
@@ -144,6 +174,7 @@ public class VigenereTable {
         return table;
     }
 
+    @Override
     public String toString() {
 
         return table.toString();
