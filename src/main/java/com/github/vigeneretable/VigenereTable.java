@@ -5,6 +5,10 @@ import com.github.util.StringUtils;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 
+/**
+ * VigenereTable class represents a Vigenère table used in
+ * encrypting and decrypting Vigenère cipher.
+ */
 public class VigenereTable {
 
     public static final String ALPHABET_LATIN = "abcdefghijklmnopqrstuvwxyz";

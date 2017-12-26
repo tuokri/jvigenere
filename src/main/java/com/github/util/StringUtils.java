@@ -2,7 +2,11 @@ package com.github.util;
 
 import java.math.BigInteger;
 
-public class StringUtils {
+/**
+ * StringUtils class provides utility methods related
+ * to {@code String} handling and manipulation.
+ */
+public final class StringUtils {
 
     private StringUtils() {
 
