@@ -12,7 +12,7 @@ public class View implements Observer {
     private Model model;
     private JFrame frame;
 
-    public static void addComponentsToPane(Container pane) {
+    private void addComponentsToPane(Container pane) {
 
         pane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 
@@ -36,6 +36,15 @@ public class View implements Observer {
         constraints.gridwidth = 3;
         pane.add(keyInputField, constraints);
         constraints.gridwidth = 1;
+
+        button = new JButton();
+        ImageIcon icon = new ImageIcon(getClass().getResource("/button_question_mark_default.png"));
+        button.setIcon(icon);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridx = 5;
+        constraints.gridy = 0;
+        constraints.insets = new Insets(0,10,0,0);
+        pane.add(button, constraints);
 
         button = new JButton("Exit");
         constraints.fill = GridBagConstraints.HORIZONTAL;
