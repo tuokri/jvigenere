@@ -37,9 +37,14 @@ public class View implements Observer {
         pane.add(keyInputField, constraints);
         constraints.gridwidth = 1;
 
+        ImageIcon icon;
         button = new JButton();
-        ImageIcon icon = new ImageIcon(getClass().getResource("/button_question_mark_default.png"));
+        icon = new ImageIcon(getClass().getResource("/icons/button_question_mark_default_18x18.png"));
         button.setIcon(icon);
+        icon = new ImageIcon(getClass().getResource("/icons/button_question_mark_rollover_18x18.png"));
+        button.setRolloverIcon(icon);
+        icon = new ImageIcon(getClass().getResource("/icons/button_question_mark_pressed_18x18.png"));
+        button.setPressedIcon(icon);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.gridx = 5;
         constraints.gridy = 0;
