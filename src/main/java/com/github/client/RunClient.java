@@ -14,7 +14,7 @@ public class RunClient {
             public void run() {
 
                 Model model = new Model();
-                View view = new View(model, "Vigenecryptor");
+                View view = new View(model, "Vigenècryptor");
             }
         });
     }
