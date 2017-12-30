@@ -12,69 +12,9 @@ public class View implements Observer {
     private Model model;
     private JFrame frame;
 
-    private void addComponentsToPane(Container pane) {
+    private boolean showInitialHelpAgain = true;
 
-        pane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-
-        JLabel keyLabel;
-        JTextField keyInputField;
-        JButton button;
-
-        pane.setLayout(new GridBagLayout());
-        GridBagConstraints constraints = new GridBagConstraints();
-
-        keyLabel = new JLabel("Enter key:");
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        pane.add(keyLabel, constraints);
-
-        keyInputField = new JTextField();
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.gridx = 1;
-        constraints.gridy = 0;
-        constraints.gridwidth = 3;
-        pane.add(keyInputField, constraints);
-        constraints.gridwidth = 1;
-
-        ImageIcon icon;
-        button = new JButton();
-        icon = new ImageIcon(getClass().getResource("/icons/button_question_mark_default_18x18.png"));
-        button.setIcon(icon);
-        icon = new ImageIcon(getClass().getResource("/icons/button_question_mark_rollover_18x18.png"));
-        button.setRolloverIcon(icon);
-        icon = new ImageIcon(getClass().getResource("/icons/button_question_mark_pressed_18x18.png"));
-        button.setPressedIcon(icon);
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.gridx = 5;
-        constraints.gridy = 0;
-        constraints.insets = new Insets(0,10,0,0);
-        pane.add(button, constraints);
-
-        button = new JButton("Exit");
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        constraints.insets = new Insets(10,0,0,0);
-        constraints.anchor = GridBagConstraints.PAGE_END;
-        pane.add(button, constraints);
-
-        button = new JButton("Help");
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.gridx = 1;
-        constraints.gridy = 1;
-        constraints.insets = new Insets(10,50,0,0);
-        constraints.anchor = GridBagConstraints.PAGE_END;
-        pane.add(button, constraints);
-
-        button = new JButton("Next");
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.gridx = 2;
-        constraints.gridy = 1;
-        constraints.insets = new Insets(10,0,0,0);
-        constraints.anchor = GridBagConstraints.PAGE_END;
-        pane.add(button, constraints);
-    }
+    private MainMenu mainMenu = new MainMenu();
 
     public View(Model model, String label) {
 
@@ -83,15 +23,48 @@ public class View implements Observer {
 
         frame = new JFrame(label);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        addComponentsToPane(frame.getContentPane());
+        frame.setContentPane(mainMenu.getContentPane());
         frame.pack();
         frame.setLocationRelativeTo(null); // Center of primary monitor.
         frame.setResizable(false);
         frame.setVisible(true);
+        showInitialHelpDialog();
     }
 
     @Override
     public void update(Observable o, Object arg) {
 
+    }
+
+    private void showInitialHelpDialog() {
+
+        JRadioButton dontShowAgainButton = new JRadioButton(
+            "Always show this help on program start.", true);
+        JLabel helpText1 = new JLabel(
+            "This program uses Vigenère cipher to translate plain text to cipher text and vice versa.");
+        JLabel helpText2 = new JLabel(
+            "You may choose from pre-defined alphabets or enter a custom one.");
+
+        dontShowAgainButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        helpText1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        helpText2.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        dontShowAgainButton.addActionListener(e -> {
+            showInitialHelpAgain = dontShowAgainButton.isSelected();
+            System.out.println("showInitialHelpAgain = " + showInitialHelpAgain);
+            // TODO: Save state on disk.
+        });
+
+        JPanel messagePane = new JPanel();
+        messagePane.setLayout(new BoxLayout(messagePane, BoxLayout.Y_AXIS));
+        messagePane.add(helpText1);
+        messagePane.add(helpText2);
+        messagePane.add(dontShowAgainButton);
+
+        JOptionPane pane = new JOptionPane(messagePane);
+        JDialog dialog = pane.createDialog("How to use Vigenècryptor");
+        dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        dialog.pack();
+        dialog.setVisible(true);
     }
 }
