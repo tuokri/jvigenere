@@ -3,6 +3,8 @@ package com.github.client.view;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.github.client.view.ButtonFactory.createQuestionMarkButton;
+
 public class MainMenu {
 
     private JPanel mainPanel;
@@ -152,18 +154,5 @@ public class MainMenu {
         pane.add(navigationPanel, navigationPanelGbc);
 
         System.out.println(this + ": initComponents on : " + pane);
-    }
-
-    private JButton createQuestionMarkButton() {
-
-        ImageIcon icon;
-        JButton button = new JButton();
-        icon = new ImageIcon(getClass().getResource("/icons/button_question_mark_default_18x18.png"));
-        button.setIcon(icon);
-        icon = new ImageIcon(getClass().getResource("/icons/button_question_mark_rollover_18x18.png"));
-        button.setRolloverIcon(icon);
-        icon = new ImageIcon(getClass().getResource("/icons/button_question_mark_pressed_18x18.png"));
-        button.setPressedIcon(icon);
-        return button;
     }
 }
