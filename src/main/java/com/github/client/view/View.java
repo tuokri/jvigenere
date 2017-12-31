@@ -14,12 +14,13 @@ public class View implements Observer {
 
     private boolean showInitialHelpAgain = true;
 
-    private MainMenu mainMenu = new MainMenu();
+    private MainMenu mainMenu;
 
     public View(Model model, String label) {
 
         this.model = model;
         model.addObserver(this);
+        mainMenu = new MainMenu();
 
         frame = new JFrame(label);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -36,18 +37,23 @@ public class View implements Observer {
 
     }
 
+    // TODO: Make a new class out of this method.
     private void showInitialHelpDialog() {
 
         JRadioButton dontShowAgainButton = new JRadioButton(
             "Always show this help on program start.", true);
-        JLabel helpText1 = new JLabel(
+        JTextField helpText1 = new JTextField(
             "This program uses Vigenère cipher to translate plain text to cipher text and vice versa.");
-        JLabel helpText2 = new JLabel(
+        JTextField helpText2 = new JTextField(
             "You may choose from pre-defined alphabets or enter a custom one.");
 
         dontShowAgainButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        helpText1.setAlignmentX(Component.CENTER_ALIGNMENT);
-        helpText2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        helpText1.setEditable(false);
+        helpText2.setEditable(false);
+        helpText1.setBackground(null);
+        helpText2.setBackground(null);
+        helpText1.setBorder(null);
+        helpText2.setBorder(null);
 
         dontShowAgainButton.addActionListener(e -> {
             showInitialHelpAgain = dontShowAgainButton.isSelected();
